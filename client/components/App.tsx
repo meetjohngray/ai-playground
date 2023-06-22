@@ -2,7 +2,11 @@ import { useState, useEffect } from 'react'
 import { getAnswer } from '../apiClient'
 
 const App = () => {
-  const [question, setQuestion] = useState('')
+  interface promptData { question: string}
+  
+  const initialState: promptData = { question: ''}
+  const [formData, setFormData] = useState(initialState)
+  const { question } = formData
   const [answer, setAnswer] = useState('')
   const [isError, setIsError] = useState(false)
 
@@ -19,18 +23,24 @@ const App = () => {
   //     })
   // }, [question])
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    setQuestion(e.target.value)
-  }
+  // const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  //   setQuestion({e.target.name: e.target.value})
+  // }
 
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    const { name, value } = e.currentTarget
+    setFormData((previous) => ({ ...previous, [name]: value }))
+  }
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     console.log(question)
-    getAnswer(question)
+    getAnswer(formData)
       .then((data) => {
         console.log('App', data)
         setAnswer(data)
-        setQuestion('')
+        setFormData(initialState)
       })
       .catch((err) => console.log(err))
     }

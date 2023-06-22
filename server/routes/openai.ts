@@ -22,7 +22,7 @@ async function getCompletion(prompt: string) {
 
 router.post('/', async (req, res) => {
   console.log('req', req.body)
-  const prompt = req.body
+  const prompt = req.body.question
   console.log('prompt', prompt)
   
   try {

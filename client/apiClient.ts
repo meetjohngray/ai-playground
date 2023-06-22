@@ -1,6 +1,6 @@
 import request from 'superagent'
 
-export function getAnswer(question: string): Promise<string> {
+export function getAnswer(question): Promise<string> {
   console.log('api request', question)
   return request
     .post('/api/v1/openai')
