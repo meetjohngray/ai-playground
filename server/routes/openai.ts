@@ -1,7 +1,7 @@
-import { Router } from 'express'
-
 import 'dotenv/config'
+import { Router } from 'express'
 import { Configuration, OpenAIApi } from 'openai'
+
 
 const router = Router()
 
@@ -11,26 +11,26 @@ const configuration = new Configuration({
 
 const openai = new OpenAIApi(configuration)
 
-router.get('/', (req, res) => {
-  async function getCompletion() {
-    try {
-      const chatCompletion = await openai.createChatCompletion({
-        model: 'gpt-3.5-turbo',
-        messages: [{ role: 'user', content: 'Hello, who am I?' }],
-      })
-      console.log(chatCompletion.data.choices[0].message)
-      res.send(chatCompletion.data.choices[0].message)
-    } catch (error: any) {
-      if (error.response) {
-        console.log(error.response.status)
-        console.log(error.response.data)
-      } else {
-        console.log(error.message)
-      }
+async function getCompletion() {
+    const chatCompletion = await openai.createChatCompletion({
+      model: 'gpt-3.5-turbo',
+      messages: [{ role: 'user', content: 'Who is the most succesful NCAA college football team of all time?' }],
+    })
+    const data = chatCompletion.data.choices[0].message
+    return data
+}
+
+router.get('/', async (req, res) => {
+  try {
+    const data = await getCompletion()
+    res.status(200).json({ data })
+  } catch (error: unknown) {
+    if (error instanceof Error) { 
+      console.error(error)
+    } else {    
+      res.status(500).json({ message: 'Something went wrong' })
     }
   }
-
-  getCompletion()
 })
 
 export default router
