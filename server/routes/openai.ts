@@ -11,18 +11,21 @@ const configuration = new Configuration({
 
 const openai = new OpenAIApi(configuration)
 
-async function getCompletion() {
+async function getCompletion(prompt: string) {
     const chatCompletion = await openai.createChatCompletion({
       model: 'gpt-3.5-turbo',
-      messages: [{ role: 'user', content: 'Who is the most succesful NCAA college football team of all time?' }],
+      messages: [{ role: 'user', content: prompt }],
     })
     const data = chatCompletion.data.choices[0].message
     return data
 }
 
 router.get('/', async (req, res) => {
+  console.log(req.body)
+  const prompt = req.body.question
+  
   try {
-    const data = await getCompletion()
+    const data = await getCompletion(prompt)
     res.status(200).json({ data })
   } catch (error: unknown) {
     if (error instanceof Error) { 

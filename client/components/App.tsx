@@ -1,34 +1,54 @@
 import { useState, useEffect } from 'react'
-import { getGreeting } from '../apiClient'
+import { getAnswer } from '../apiClient'
 
 const App = () => {
-  const [greeting, setGreeting] = useState('')
-  const [count, setCount] = useState(0)
+  const [question, setQuestion] = useState('')
+  const [answer, setAnswer] = useState('')
   const [isError, setIsError] = useState(false)
 
-  useEffect(() => {
-    getGreeting()
-      .then((greeting) => {
-        console.log(greeting)
-        setGreeting(greeting)
-        setIsError(false)
-      })
-      .catch((err) => {
-        console.log(err)
-        setIsError(true)
-      })
-  }, [count])
+  // useEffect(() => {
+  //   getAnswer(question)
+  //     .then((data) => {
+  //       console.log(data)
+  //       setAnswer(data)
+  //       setIsError(false)
+  //     })
+  //     .catch((err) => {
+  //       console.log(err)
+  //       setIsError(true)
+  //     })
+  // }, [question])
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    setQuestion(e.target.value)
+  }
+
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault()
+    console.log(question)
+    getAnswer(question)
+      .then(() => setQuestion(''))
+  }
 
   return (
     <>
-      {count}
-      <h1>{greeting}</h1>
+     
+      <h1>Ask Me Anything</h1>
       {isError && (
         <p style={{ color: 'red' }}>
           There was an error retrieving the greeting.
         </p>
       )}
-      <button onClick={() => setCount(count + 1)}>Click</button>
+      <form onClick={handleSubmit} aria-label='Ask a question'>
+        <label htmlFor='question'>Question</label>
+        <textarea 
+          id='question' 
+          name='question'
+          value={question} 
+          onChange={handleChange}
+        />
+        <button type='submit' >Submit</button>
+      </form>
     </>
   )
 }
