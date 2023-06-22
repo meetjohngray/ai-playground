@@ -20,16 +20,18 @@ async function getCompletion(prompt: string) {
     return data
 }
 
-router.get('/', async (req, res) => {
-  console.log(req.body)
-  const prompt = req.body.question
+router.post('/', async (req, res) => {
+  console.log('req', req.body)
+  const prompt = req.body
+  console.log('prompt', prompt)
   
   try {
     const data = await getCompletion(prompt)
+    console.log("data", data)
     res.status(200).json({ data })
   } catch (error: unknown) {
     if (error instanceof Error) { 
-      console.error(error)
+      console.log(error.message)
     } else {    
       res.status(500).json({ message: 'Something went wrong' })
     }

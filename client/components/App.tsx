@@ -27,8 +27,13 @@ const App = () => {
     event.preventDefault()
     console.log(question)
     getAnswer(question)
-      .then(() => setQuestion(''))
-  }
+      .then((data) => {
+        console.log('App', data)
+        setAnswer(data)
+        setQuestion('')
+      })
+      .catch((err) => console.log(err))
+    }
 
   return (
     <>
@@ -39,7 +44,7 @@ const App = () => {
           There was an error retrieving the greeting.
         </p>
       )}
-      <form onClick={handleSubmit} aria-label='Ask a question'>
+      <form onSubmit={handleSubmit} aria-label='Ask a question'>
         <label htmlFor='question'>Question</label>
         <textarea 
           id='question' 
@@ -49,6 +54,9 @@ const App = () => {
         />
         <button type='submit' >Submit</button>
       </form>
+        {
+          {answer} && <p>{answer}</p>
+        }
     </>
   )
 }
