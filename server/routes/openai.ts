@@ -14,20 +14,21 @@ const openai = new OpenAIApi(configuration)
 async function getCompletion(prompt: string) {
     const chatCompletion = await openai.createChatCompletion({
       model: 'gpt-3.5-turbo',
-      messages: [{ role: 'user', content: prompt }],
+      messages: 
+      [
+          { role: 'system', content: 'You are a helpful assistant.' },
+          { role: 'user', content:    prompt }
+        ],
     })
     const data = chatCompletion.data.choices[0].message
     return data
 }
 
 router.post('/', async (req, res) => {
-  console.log('req', req.body)
   const prompt = req.body.question
-  console.log('prompt', prompt)
   
   try {
     const data = await getCompletion(prompt)
-    console.log("data", data)
     res.status(200).json({ data })
   } catch (error: unknown) {
     if (error instanceof Error) { 

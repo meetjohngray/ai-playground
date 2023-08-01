@@ -1,31 +1,15 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { getAnswer } from '../apiClient'
 
+export interface promptData { question: string}
+
 const App = () => {
-  interface promptData { question: string}
-  
+
   const initialState: promptData = { question: ''}
   const [formData, setFormData] = useState(initialState)
   const { question } = formData
   const [answer, setAnswer] = useState('')
   const [isError, setIsError] = useState(false)
-
-  // useEffect(() => {
-  //   getAnswer(question)
-  //     .then((data) => {
-  //       console.log(data)
-  //       setAnswer(data)
-  //       setIsError(false)
-  //     })
-  //     .catch((err) => {
-  //       console.log(err)
-  //       setIsError(true)
-  //     })
-  // }, [question])
-
-  // const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-  //   setQuestion({e.target.name: e.target.value})
-  // }
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -35,14 +19,15 @@ const App = () => {
   }
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
-    console.log(question)
     getAnswer(formData)
       .then((data) => {
-        console.log('App', data)
         setAnswer(data)
         setFormData(initialState)
       })
-      .catch((err) => console.log(err))
+      .catch((err) => {
+        setIsError(true)
+        console.log(err)
+      })
     }
 
   return (
